@@ -14,5 +14,5 @@ func main() {
     cmd.Stdout = os.Stdout
     cmd.Run()
 
-    fmt.Println("\033[20;40HThis is a test")
+    fmt.Println("\033[20;40HThis is a test again")
 }
