@@ -1,3 +1,7 @@
+# Executing the Program
+go run game.go [-interval=\<integer in milliseconds\>]
+
+
 # To-Do
 ### Jenkins
  - [X] Authenticate github with repository
@@ -11,4 +15,5 @@
 
 ### Program Logic
  - [X] Have steam flow vertically upwards each time interval
- - [ ] Steam updates over some set time interval
+ - [X] Steam updates over some set time interval
+    - Option to include in command line argument
