@@ -1,5 +1,5 @@
 # Executing the Program
-go run game.go [-interval=\<integer in milliseconds\>]
+`go run game.go [-interval=\<integer in milliseconds\>]`
 
 
 # To-Do
