@@ -10,28 +10,74 @@ import (
 
 var steamRows = [14]int{26, 26, 22, 22, 18, 18, 14, 14, 10, 10, 6, 6, 2, 2}
 var steam [196]byte
-var steamChars = []byte {'/', '|', '\\', ' '}
+var steamChars = []byte {'/', '|', '\\', ' ', ' '} // Add duplicate characters if you want to increase the probability that they appear
 
 func Init() {
     rand.Seed(time.Now().UnixNano())
     charLen := len(steamChars)
 
-    // Initialize steam to random character
+    // Initialize steam array to be empty characters
     for c := range steam {
+        steam[c] = ' '
+    }
+
+    // Initialize steam to random character for the first row
+    for c := 0; c < steamRows[0]; c++ {
         steam[c] = steamChars[rand.Intn(charLen)]
     }
 }
 
 func Update() {
+    // Calculate index offset
+    steamOff := 0
 
     for i := 0; i < len(steamRows) - 1; i++ {
+    
+        // Don't need to start at the very beginning of the array if the next row is not the same length of characters
+        if(steamRows[i] == steamRows[i + 1]) {
+            steamOff = 1
+        }
+            
+        for j := steamOff; j < steamRows[i] - steamOff; j++ {
+            
+            indexOff := 0
+            for k := 0; k < i; k++ {
+                indexOff += steamRows[k]
+            }
 
+            // indexRowAbove := indexOff + steamRows[i]
+            indexAbove := indexOff + j + steamRows[i]
+            // Get index of cell above current value being checked
+            if(steamRows[i] != steamRows[i + 1]) {
+                // left range, middle range, right range
+                // if j > left range and j < right range, there is an index right above
+                indexAbove -= ((steamRows[i] - steamRows[i + 1]) / 2)
+            }
+            
+            switch steam[indexOff + j] {
+                case '|':
+                    // If in middle range and not on the left/right range when the row above is decreased in width
+                    if !(j == 1 && indexOff == 1) ||  
+                        !((j == steamRows[i] - 1) && indexOff == 1) || 
+                        (j >= 2 && j <= (steamRows[i] - 2) && indexOff == 0) {
+
+                        steam[indexAbove] = '|'
+                    }
+
+                case '\\':
+                    // If not in left range
+                    if(!(j == steamOff || (steamOff == 1 && j == 2))) {
+                        steam[indexAbove - 1] = '\\'
+                    }
+
+                case '/':
+                    // If not in right range
+                    if(!(j == (steamRows[i] - 1) || (steamOff == 1 && j == (steamRows[i] - 2)))) {
+                        steam[indexAbove + 1] = '/'
+                    }
+            }
+        }
     }
-
-}
-
-func getCharacter(index int) byte {
-    return ' '
 }
 
 func Render() {
