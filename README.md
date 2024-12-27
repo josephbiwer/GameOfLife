@@ -8,3 +8,7 @@
     - Requires a POST request to be sent. Not doing this at the moment as to not expose a port on network
  - [ ] Trigger build on a per-branch basis
     - Requires a POST request to be sent. Not doing this at the moment as to not expose a port on network
+
+### Program Logic
+ - [ ] Have steam flow vertically upwards each time interval
+ - [ ] Steam updates over some set time interval
