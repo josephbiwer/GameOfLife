@@ -16,7 +16,7 @@ import (
 26
 */
 
-var steam [96]byte
+var steam [192]byte
 
 func Init() {
     for c := range steam {
@@ -42,13 +42,15 @@ func Render() {
     // Draw mug steam
     steamXOff := 0
     // steamYOff := 6 
-    for y := yOff - 1; y > (yOff - 8); y-- {
+    for y := yOff - 2; y > (yOff - 16); y-=2 {
         xOffset := steamXOff * 2
-        fmt.Print("\033[" + strconv.Itoa(y) + ";" + strconv.Itoa(xOff + xOffset - 1) + "H|")
-        for i := 0; i < (26 - 2 * xOffset); i++ {
-            fmt.Print("x")
+        for j := 0; j < 2; j++ {
+            fmt.Print("\033[" + strconv.Itoa(y + j) + ";" + strconv.Itoa(xOff + xOffset - 1) + "H|")
+            for i := 0; i < (26 - 2 * xOffset); i++ {
+                fmt.Print("x")
+            }
+            fmt.Print("|")
         }
-        fmt.Print("|")
         steamXOff++;
     }
 
