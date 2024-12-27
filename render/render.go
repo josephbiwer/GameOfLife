@@ -3,33 +3,34 @@ package render
 import (
     "fmt"
     "strconv"
+    "math/rand"
+    "time"
 )
 
-// Steam architecture
-/*
-2
-6
-10
-14
-18
-22
-26
-*/
 
-var steam [192]byte
+var steamRows = [14]int{26, 26, 22, 22, 18, 18, 14, 14, 10, 10, 6, 6, 2, 2}
+var steam [196]byte
+var steamChars = []byte {'/', '|', '\\', ' '}
 
 func Init() {
+    rand.Seed(time.Now().UnixNano())
+    charLen := len(steamChars)
+
+    // Initialize steam to random character
     for c := range steam {
-        steam[c] = ' '
+        steam[c] = steamChars[rand.Intn(charLen)]
     }
 }
 
 func Update() {
 
+    for i := 0; i < len(steamRows) - 1; i++ {
+
+    }
+
 }
 
 func getCharacter(index int) byte {
-    
     return ' '
 }
 
@@ -40,23 +41,26 @@ func Render() {
     fmt.Println("\033[2J") // Clear screen
 
     // Draw mug steam
-    steamXOff := 0
-    // steamYOff := 6 
-    for y := yOff - 2; y > (yOff - 16); y-=2 {
-        xOffset := steamXOff * 2
-        for j := 0; j < 2; j++ {
-            fmt.Print("\033[" + strconv.Itoa(y + j) + ";" + strconv.Itoa(xOff + xOffset - 1) + "H|")
-            for i := 0; i < (26 - 2 * xOffset); i++ {
-                fmt.Print("x")
-            }
-            fmt.Print("|")
+    for k := 0; k < len(steamRows); k++ {
+
+        y := yOff - 2 - k
+
+        // Calculate index offset
+        indexOff := 0
+        for j := 0; j < k; j++ {
+            indexOff += steamRows[j]
         }
-        steamXOff++;
+
+        fmt.Print("\033[" + strconv.Itoa(y) + ";" + strconv.Itoa(xOff + (26 - steamRows[k]) / 2) + "H")
+        for i := 0; i < 26 - (26 - steamRows[k] ); i++ {
+            fmt.Printf("%c", steam[indexOff + i])
+        }
+
     }
 
 
     // Draw Mug
-    fmt.Println("\033[" + strconv.Itoa(yOff) + ";103H|------------------------|")
+    fmt.Println("\033[" + strconv.Itoa(yOff) + ";103H/------------------------\\")
     for x := 1; x < 11; x++ {
         str := "\033["
         str += strconv.Itoa(yOff + x)
