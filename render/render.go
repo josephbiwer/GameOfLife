@@ -14,22 +14,24 @@ var steamChars = []byte {'/', '|', '\\', ' ', ' '} // Add duplicate characters i
 
 func Init() {
     rand.Seed(time.Now().UnixNano())
-    charLen := len(steamChars)
 
     // Initialize steam array to be empty characters
     for c := range steam {
         steam[c] = ' '
     }
 
+}
+
+func Update() {
+    steamOff := 0
+
+    copy(steam[steamRows[0]:steamRows[1]], steam[0:steamRows[0]])
+
+    charLen := len(steamChars)
     // Initialize steam to random character for the first row
     for c := 0; c < steamRows[0]; c++ {
         steam[c] = steamChars[rand.Intn(charLen)]
     }
-}
-
-func Update() {
-    // Calculate index offset
-    steamOff := 0
 
     for i := 0; i < len(steamRows) - 1; i++ {
     
