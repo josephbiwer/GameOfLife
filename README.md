@@ -1,5 +1,11 @@
 # Executing the Program
-`go run game.go [-interval=<integer in milliseconds>]`
+`go run game.go`
+
+### Options
+- `-interval=<integer in milliseconds>`
+    - Default: 333 [milliseconds]
+- `-debug=true`
+    - Default: false
 
 
 # To-Do

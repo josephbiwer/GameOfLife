@@ -10,7 +10,7 @@ import (
 
 var steamRows = [14]int{26, 26, 22, 22, 18, 18, 14, 14, 10, 10, 6, 6, 2, 2}
 var steam [196]byte
-var steamChars = []byte {'/', '|', '\\', ' ', ' '} // Add duplicate characters if you want to increase the probability that they appear
+var steamChars = []byte {'(', ')', ' ', ' ', ' ', ' ', ' '} // Add duplicate characters if you want to increase the probability that they appear
 
 func Init() {
     rand.Seed(time.Now().UnixNano())
@@ -23,9 +23,12 @@ func Init() {
 }
 
 func Update() {
-    steamOff := 0
 
-    copy(steam[steamRows[0]:steamRows[1]], steam[0:steamRows[0]])
+    for c := 52; c < len(steam); c++ {
+        steam[c] = ' '
+    }
+
+    copy(steam[26:52], steam[0:26])
 
     charLen := len(steamChars)
     // Initialize steam to random character for the first row
@@ -33,7 +36,8 @@ func Update() {
         steam[c] = steamChars[rand.Intn(charLen)]
     }
 
-    for i := 0; i < len(steamRows) - 1; i++ {
+    for i := 1; i < len(steamRows) - 1; i++ {
+        steamOff := 0
     
         // Don't need to start at the very beginning of the array if the next row is not the same length of characters
         if(steamRows[i] == steamRows[i + 1]) {
@@ -47,7 +51,11 @@ func Update() {
                 indexOff += steamRows[k]
             }
 
-            // indexRowAbove := indexOff + steamRows[i]
+            // Replace current character with something else before evaluating character above
+            if rand.Intn(4) == 0 {
+                steam[indexOff + j] = steamChars[rand.Intn(charLen)]
+            }
+
             indexAbove := indexOff + j + steamRows[i]
             // Get index of cell above current value being checked
             if(steamRows[i] != steamRows[i + 1]) {
@@ -72,11 +80,29 @@ func Update() {
                         steam[indexAbove - 1] = '\\'
                     }
 
+                case ')':
+                    // If not in left range
+                    if(!(j == steamOff || (steamOff == 1 && j == 2))) {
+                        // steam[indexAbove - 1] = '('
+                        steam[indexAbove] = '('
+                    }
+
                 case '/':
                     // If not in right range
                     if(!(j == (steamRows[i] - 1) || (steamOff == 1 && j == (steamRows[i] - 2)))) {
                         steam[indexAbove + 1] = '/'
                     }
+                    
+                case '(':
+                    // If not in right range
+                    if(!(j == (steamRows[i] - 1) || (steamOff == 1 && j == (steamRows[i] - 2)))) {
+                        // steam[indexAbove + 1] = ')'
+                        steam[indexAbove] = ')'
+                    }
+                
+                default:
+                    steam[indexAbove] = ' '
+
             }
         }
     }
@@ -106,18 +132,24 @@ func Render() {
 
     }
 
-
     // Draw Mug
     fmt.Println("\033[" + strconv.Itoa(yOff) + ";103H/------------------------\\")
-    for x := 1; x < 11; x++ {
-        str := "\033["
-        str += strconv.Itoa(yOff + x)
-        str += ";" + strconv.Itoa(xOff) + "H|                        |"
-        fmt.Println(str)
-    }
+    fmt.Println("\033[" + strconv.Itoa(yOff + 1) + ";102H|                          |")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 2) + ";103H\\------------------------/")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 3) + ";103H|                        |")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 4) + ";103H|                        | ______")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 5) + ";103H|                        |/      \\")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 6) + ";103H|                        |  (--)  \\")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 7) + ";103H|                        |  |  |  |")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 8) + ";103H|                        |  )  (  |")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 9) + ";103H|                        |  |  |  |")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 10) + ";103H|                        |  (--)  |")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 11) + ";103H|                        |        /")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 12) + ";103H|                        |\\______/")
 
-    fmt.Println("\033[" + strconv.Itoa(yOff + 11) + ";" + strconv.Itoa(xOff)     + "H\\                        /")
-    fmt.Println("\033[" + strconv.Itoa(yOff + 12) + ";" + strconv.Itoa(xOff + 1) + "H\\                      /")
-    fmt.Println("\033[" + strconv.Itoa(yOff + 13) + ";" + strconv.Itoa(xOff + 2) + "H\\                    /")
-    fmt.Println("\033[" + strconv.Itoa(yOff + 14) + ";" + strconv.Itoa(xOff + 3) + "H\\------------------/")
+
+    fmt.Println("\033[" + strconv.Itoa(yOff + 13) + ";" + strconv.Itoa(xOff)     + "H\\                        /")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 14) + ";" + strconv.Itoa(xOff + 1) + "H\\                      /")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 15) + ";" + strconv.Itoa(xOff + 2) + "H\\                    /")
+    fmt.Println("\033[" + strconv.Itoa(yOff + 16) + ";" + strconv.Itoa(xOff + 3) + "H\\------------------/")
 }
