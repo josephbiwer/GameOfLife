@@ -21,3 +21,20 @@ func TestInitialize(t *testing.T) {
     }
 
 }
+
+func TestSteamPropagation(t *testing.T) {
+
+    for c := 0; c < 5; c++ {
+        
+        render.Init()
+        steam := render.GetSteam()[5]
+        render.Update()
+        newSteam := render.GetSteam()[31]
+
+        if newSteam != steam {
+            t.Errorf("Steam was not properly copied. Itteration: %d, Risen steam: %c, old steam: %c", c, steam, newSteam)
+        }
+
+    }
+
+}

@@ -55,9 +55,11 @@ func Update() {
             }
 
             // Replace current character with something else before evaluating character above
+            /*
             if rand.Intn(4) == 0 {
                 steam[indexOff + j] = steamChars[rand.Intn(charLen)]
             }
+            */
 
             indexAbove := indexOff + j + steamRows[i]
             // Get index of cell above current value being checked
