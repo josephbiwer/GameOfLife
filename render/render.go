@@ -19,7 +19,10 @@ func Init() {
     for c := range steam {
         steam[c] = ' '
     }
+}
 
+func GetSteam() [len(steam)]byte {
+    return steam
 }
 
 func Update() {
