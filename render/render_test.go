@@ -2,7 +2,7 @@ package render
 
 import (
     "testing"
-    "gameoflife/render"
+    "mugrender/render"
 )
 
 func TestInitialize(t *testing.T) {
